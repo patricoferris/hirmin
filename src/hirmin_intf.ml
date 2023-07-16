@@ -27,7 +27,10 @@ module type S = sig
   (** The main branch of the store *)
 
   val set_exn : info:I.Info.f -> t -> 'a Key.t -> 'a -> unit Lwt.t
+  (** Like Irmin's [set_exn] but now the value type depends on the key. *)
+
   val find : t -> 'a Key.t -> 'a option Lwt.t
+  (** Like Irmin's [find] except the value type depends on the key. *)
 end
 
 module type Maker = functor
