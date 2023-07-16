@@ -1,0 +1,5 @@
+(executable
+ (name main)
+ (preprocess
+  (pps ppx_irmin))
+ (libraries hirmin irmin-git.unix ezjsonm))
