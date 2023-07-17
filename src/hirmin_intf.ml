@@ -31,6 +31,35 @@ module type S = sig
 
   val find : t -> 'a Key.t -> 'a option Lwt.t
   (** Like Irmin's [find] except the value type depends on the key. *)
+
+  module Tree : sig
+    type t
+    (** Like Irmin trees but with the keys *)
+
+    val empty : unit -> t
+    (** The empty tree *)
+
+    val add : ?metadata:I.metadata -> t -> 'a Key.t -> 'a -> t Lwt.t
+    (** Add a new key-value pair to a tree *)
+
+    val mem : t -> 'a Key.t -> bool Lwt.t
+    (** Check for membership *)
+
+    val remove : t -> 'a Key.t -> t Lwt.t
+    (** Remove a key from a tree *)
+  end
+
+  val set_tree_exn :
+    ?clear:bool ->
+    ?retries:int ->
+    ?allow_empty:bool ->
+    ?parents:I.commit list ->
+    info:I.Info.f ->
+    t ->
+    'a Key.t ->
+    Tree.t ->
+    unit Lwt.t
+  (** Like Irmin's [set_tree_exn] only using a the key API. *)
 end
 
 module type Maker = functor

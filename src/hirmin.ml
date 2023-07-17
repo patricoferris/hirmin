@@ -25,4 +25,27 @@ struct
     let key = K.key_to_path k in
     let f v = Irmin.Type.(of_string (K.repr k)) v |> Result.get_ok in
     I.find t key >|= fun v -> Option.map f v
+
+  module Tree = struct
+    type t = I.tree
+
+    let empty = I.Tree.empty
+
+    let add ?metadata t k v =
+      let key = K.key_to_path k in
+      let v = to_string (K.repr k) v in
+      I.Tree.add ?metadata t key v
+
+    let mem t k =
+      let key = K.key_to_path k in
+      I.Tree.mem t key
+
+    let remove t k =
+      let key = K.key_to_path k in
+      I.Tree.remove t key
+  end
+
+  let set_tree_exn ?clear ?retries ?allow_empty ?parents ~info t k tree =
+    let key = K.key_to_path k in
+    I.set_tree_exn ?clear ?retries ?allow_empty ?parents ~info t key tree
 end
